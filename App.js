@@ -4,14 +4,23 @@ import {createStore,combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 // import {AppLoading} from 'expo'
 // import * as Font from 'expo-font'
-import productsReducres from './store/reducers/products';
-import cartReducer from './store/reducers/cart'
+import bannersReducers from './store/reducers/banners'
+import cartReducers from './store/reducers/cart'
+import coinsReducers from './store/reducers/coins'
+import ownersReducers from './store/reducers/owners'
+import productsReducers from './store/reducers/products';
+import shortcutsReducers from './store/reducers/shortcuts';
+
 import ShopNavigation from './navigation/ShopNavigation';
 import { useState } from 'react';
 
 const rootReducers = combineReducers({
-  products : productsReducres,
-  carts : cartReducer
+  banners : bannersReducers,
+  carts : cartReducers,
+  coins : coinsReducers,
+  owners: ownersReducers,
+  products : productsReducers,
+  shortcuts: shortcutsReducers,
 })
 const store = createStore(rootReducers)
 

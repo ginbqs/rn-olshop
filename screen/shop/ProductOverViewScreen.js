@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View,FlatList,Image } from 'react-native';
+import { StyleSheet, View,FlatList } from 'react-native';
 import {useSelector,useDispatch} from 'react-redux'
 import {addToCart} from '../../store/actions/cart'
 

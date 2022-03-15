@@ -23,7 +23,7 @@ const MyMoney = ({data}) => {
             <View style={styles.money}>
                 <View style={styles.subMoney}>
                     <Ionicons name="card-outline" size={20} color={Colors.primary500} />
-                    <Label styleProps={styles.subMoneyText}>{Currency(data.point)}</Label>
+                    <Label styleProps={styles.subMoneyText}>{Currency(data.points)}</Label>
                 </View>
                 <View>
                     <SubLabel styleProps={styles.moneyDesc}> Klaim disini</SubLabel>

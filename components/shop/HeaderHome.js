@@ -20,20 +20,20 @@ export default function HeaderHome({data,onRedirectCart}) {
                 <View style={styles.containerHeaderIcon}>
                   <Ionicons name='mail-outline' size={24}  style={styles.headerIcon} />
                   <View style={styles.headerIconContainerText}>
-                    <TextLittle styleProps={styles.headerIconText}>{data.mail}</TextLittle>
+                    <TextLittle styleProps={styles.headerIconText}>{data.mail > 99 ? '99+' : data.mail}</TextLittle>
                   </View>
                 </View>
                 <View style={styles.containerHeaderIcon}>
                   <Ionicons name='notifications-outline' size={24} style={styles.headerIcon} />
                   <View style={styles.headerIconContainerText}>
-                    <TextLittle styleProps={styles.headerIconText}>{data.notif}</TextLittle>
+                    <TextLittle styleProps={styles.headerIconText}>{data.notif > 99 ? '99+' : data.notif}</TextLittle>
                   </View>
                 </View>
                 <View style={styles.containerHeaderIcon}>
                  <ButtonOpacity onPress={onRedirectCart}>
                   <Ionicons name='ios-cart-outline' size={24}  style={styles.headerIcon} />
                   <View style={styles.headerIconContainerText}>
-                    <TextLittle styleProps={styles.headerIconText}>{totalCart}</TextLittle>
+                    <TextLittle styleProps={styles.headerIconText}>{totalCart > 99 ? '99+' : totalCart}</TextLittle>
                   </View>
                   </ButtonOpacity>
                 </View>

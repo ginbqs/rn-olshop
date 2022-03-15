@@ -1,9 +1,9 @@
 import { View,StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 
-export default function Card({children}){
+export default function Card({children,stylesProps}){
     return (
-        <View style={styles.card}>
+        <View style={{...styles.card,...stylesProps}}>
             {children}
         </View>
     )
@@ -12,6 +12,5 @@ export default function Card({children}){
 const styles = StyleSheet.create({
     card:{
         backgroundColor:Colors.background,
-        marginBottom:10
     }
 })

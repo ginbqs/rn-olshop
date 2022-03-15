@@ -1,18 +1,19 @@
 class Product{
-    constructor(id,ownerId,title,imageUrl,description,price,discount,ongkir,address,stock,sale,rating,flashSale){
+    constructor(id,ownerId,title,imageUrl,price,discount,freeShipping,stock,sold,reivew,discussion,rating,flashSale,description){
         this.id = id;
         this.ownerId = ownerId;
         this.title = title;
         this.imageUrl = imageUrl;
-        this.description = description;
         this.price = price;
         this.discount = discount;
-        this.ongkir = ongkir;
-        this.address = address;
+        this.freeShipping = freeShipping;
         this.stock = stock;
-        this.sale = sale;
+        this.sold = sold;
+        this.reivew = reivew;
+        this.discussion = discussion;
         this.rating = rating;
         this.flashSale = flashSale;
+        this.description = description;
     }
 }
 export default Product

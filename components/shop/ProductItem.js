@@ -1,16 +1,12 @@
 import React from 'react'
-import {View, StyleSheet, Image,TouchableOpacity,TouchableNativeFeedback, Platform} from 'react-native'
+import {View, StyleSheet, Image} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import  Colors  from '../../constants/Colors'
 import { Currency } from '../../utils/Number'
-import { Heading, Label,TextLittle, SubHeading } from '../Font'
+import { Label,TextLittle, SubHeading } from '../Font'
 import ButtonOpacity from '../ButtonOpacity'
 
 const ProductItem = ({onViewDetail,onAddToCart,data}) => {
-    let Touchable = TouchableOpacity
-    if(Platform.OS=='android' && Platform.Version >=21){
-        Touchable = TouchableNativeFeedback
-    }
     const price = data.item.price - (data.item.price/100*data.item.discount)
     return(
         <View style={styles.container}>
@@ -62,7 +58,7 @@ const ProductItem = ({onViewDetail,onAddToCart,data}) => {
                         </View>
                     </View>
                     {
-                        data.item.ongkir === 1 && (
+                        data.item.freeShipping && (
                             <View style={styles.containerButton}>
                                 <ButtonOpacity><Image source={{uri:'https://freepikpsd.com/file/2019/10/gratis-ongkir-png-5-Transparent-Images.png'}} style={{height:50,width:50}} /></ButtonOpacity>
                             </View>
