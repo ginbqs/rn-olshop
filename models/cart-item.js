@@ -1,6 +1,7 @@
 class CartItem{
-    constructor(prodTitle,freeShipping,productPriceOrigin,discount,productPrice,quantity,sum,note,ownerId,ownerName,address){
+    constructor(prodTitle,imageUrl,freeShipping,productPriceOrigin,discount,productPrice,quantity,sum,note,ownerId,ownerName,ownerLogo,address,isChecked){
         this.prodTitle = prodTitle;
+        this.imageUrl = imageUrl;
         this.freeShipping = freeShipping;
         this.productPriceOrigin = productPriceOrigin;
         this.discount = discount;
@@ -10,7 +11,9 @@ class CartItem{
         this.note = note;
         this.ownerId = ownerId;
         this.ownerName = ownerName;
+        this.ownerLogo = ownerLogo;
         this.address = address;
+        this.isChecked = isChecked;
     }
 }
 

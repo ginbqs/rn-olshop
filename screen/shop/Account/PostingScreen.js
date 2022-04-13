@@ -1,9 +1,9 @@
 import { View,Text } from 'react-native';
 
-export default function AccountScreen() {
+export default function PostingScreen() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings!</Text>
+        <Text>PostingScreen!</Text>
       </View>
     );
   }

@@ -11,10 +11,15 @@ import Card from '../../components/Card';
 
 export default function ProductDetailScreen({ route, navigation }) {
   const { prodId } = route.params;
-  const selectedProduct = useSelector(state => state.products.availableProducts.find(prod => prod.id === prodId))
+  let selectedProduct = useSelector(state => state.products.availableProducts.find(prod => prod.id === prodId))
   const selectedOwner = useSelector(state => state.owners.owners.find(own => own.id == selectedProduct.ownerId))
   const price = selectedProduct.price - (selectedProduct.price/100*selectedProduct.discount)
-  console.log(selectedProduct)
+  selectedProduct = {
+    ...selectedProduct,
+    ownerName:selectedOwner.ownerName,
+    ownerLogo:selectedOwner.ownerLogo,
+    address:selectedOwner.address,
+  }
   const dispatch = useDispatch();
   const animatedButtonScale = new Animated.Value(1);
 
@@ -56,9 +61,6 @@ export default function ProductDetailScreen({ route, navigation }) {
                 )
             }
           </View>
-          {/* <ButtonOpacity onPress={() =>{
-            dispatch(addToCart(selectedProduct))
-          }}><Ionicons name='ios-cart-outline' size={30} color={Colors.primary500} /></ButtonOpacity> */}
           <TouchableWithoutFeedback
             onPress={() =>{
               dispatch(addToCart(selectedProduct))

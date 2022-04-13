@@ -132,7 +132,7 @@ const PRODUCTS = [
 ];
 const OWNERS = [
   new Owner(
-    'u1',
+    'BChqqMLfFEeEzcQrfAT4hvnzzCw2',
     'Lacoste',
     'https://cdn.imgbin.com/11/14/14/imgbin-logo-brand-crocodile-lacoste-clothing-crocodile-nJuEEYBfBKRVziR0AFrML8rrn.jpg',
     'Bandung Barat',

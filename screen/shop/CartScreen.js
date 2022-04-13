@@ -1,84 +1,161 @@
-import {useState} from 'react'
-import { StyleSheet, Text, View,FlatList } from 'react-native';
-import {useSelector} from 'react-redux'
+import {useEffect, useState} from 'react'
+import { StyleSheet, View,FlatList,Alert } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux'
 import CheckBox from "expo-checkbox";
 import {Ionicons} from '@expo/vector-icons'
+
+import {updateCheckedProduct} from '../../store/actions/cart'
+import {addOrder} from '../../store/actions/order'
 import { Heading, Label,Title } from '../../components/Font';
 import Colors from '../../constants/Colors';
 import ButtonOpacity from '../../components/ButtonOpacity';
 import { Currency } from '../../utils/Number';
 import CartItem from '../../components/shop/CartItem';
+import { ActivityIndicator } from 'react-native-web';
 
 export default function CartScreen() {
-  const [isSelected, setSelection] = useState(false);
   const selectedCart = useSelector(state => state.carts)
+  const dispatch = useDispatch()
   let ownerId = ''
   let tempCart = {}
-  let updateCart = []
   let tempCartOwner = []
+  let tempOwnerId = []
   for (const key in selectedCart.items) {
     ownerId =  selectedCart.items[key].ownerId
-    if(!tempCartOwner.includes(ownerId)) tempCartOwner.push(ownerId)
-    
-    // updateCart.push({
-    //   note: selectedCart.items[key].note,
-    //   productId: selectedCart.items[key].prodId,
-    //   productPrice: selectedCart.items[key].productPrice,
-    //   quantity: selectedCart.items[key].quantity,
-    //   sum: selectedCart.items[key].sum,
-    //   ownerId: selectedCart.items[key].ownerId,
-    // })
-    // tempCart = {...tempCart,[ownerId]:updateCart}
-    // console.log(selectedCart.items[key])
-    // console.log(selectedCart.items[key])
+    if(!tempOwnerId.includes(ownerId)) tempOwnerId.push(ownerId)
+    tempCartOwner = {...tempCartOwner,[ownerId]:{
+      ownerName : selectedCart.items[key].ownerName,
+      address : selectedCart.items[key].address,
+      ownerLogo : selectedCart.items[key].ownerLogo
+    }}
     tempCart[ownerId] =  {...tempCart[ownerId],[key]:selectedCart.items[key]}
-    // if()
   }
-  console.log('tempCart')
-  console.log(tempCartOwner)
-  console.log(tempCart)
+  const [selectedAllCart, setSelectedAllCart] = useState(false);
+  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState();
+  const [cartOwnerSelected,setOwnerCartSelected] = useState([])
+ 
+  const handleCheckedProdCart = (prodId,isChecked) => {
+    dispatch(updateCheckedProduct(prodId,isChecked))
+  }
+  const handleCheckedOwnerCart = ownerId => {
+    if(cartOwnerSelected.includes(ownerId)){
+      const selectedOwner = cartOwnerSelected.filter(val => val!=ownerId)
+      setOwnerCartSelected(selectedOwner)
+      for(var key in selectedCart.items){
+        if(selectedCart.items[key].ownerId===ownerId){
+          dispatch(updateCheckedProduct(key,false))
+        }
+      }
+    }else{
+      setOwnerCartSelected(prev => [...prev,ownerId])
+      for(var key in selectedCart.items){
+        if(selectedCart.items[key].ownerId===ownerId){
+          dispatch(updateCheckedProduct(key,true))
+        }
+      }
+    }
+  }
+  const handleCheckedAllProduct = () => {
+    let tempOwner = []
+    for(var key in selectedCart.items){
+      if(!selectedAllCart){
+        dispatch(updateCheckedProduct(key,true))
+        if(!tempOwner.includes(selectedCart.items[key].ownerId))tempOwner.push(selectedCart.items[key].ownerId)
+      }else{
+        dispatch(updateCheckedProduct(key,false))
+      }
+    }
+    setSelectedAllCart(!selectedAllCart)
+    setOwnerCartSelected(tempOwner)
+  }
+  const handleCheckout = () =>{
+    try {
+      setError(null)
+      setIsLoading(true)
+      let tempProductSelected = []
+      let tempSum = 0
+      for(var key in selectedCart.items){
+        if(selectedCart.items[key].isChecked){
+          tempProductSelected.push(selectedCart.items[key])
+          tempSum += selectedCart.items[key].sum
+        }
+      }
+      if(tempProductSelected.length > 0) dispatch(addOrder(tempProductSelected,tempSum))
+      setIsLoading(false)
+    } catch (err) {
+      setError(err.message)
+    }
+    
+  }
+  useEffect(() => {
+    if(error){
+      Alert.alert('Error',error)
+    }
+  },[error])
   return (
     <View style={styles.container}>
-      <View style={styles.choice}>
-      <CheckBox
-          value={isSelected}
-          onValueChange={setSelection}
-          style={styles.checkbox}
-        />
-        <Title>Pilih</Title>
-        <Label>Pilih</Label>
+      <View style={{height:60}}>
+        <View style={{...styles.choice,...styles.shadow}}>
+            <CheckBox
+              value={selectedAllCart}
+              onValueChange={handleCheckedAllProduct}
+              style={styles.checkbox}
+            />
+            <Title>Pilih</Title>
+            <Label>Pilih</Label>
+        </View>
+        <View style={{height:1,backgroundColor:'#e9e8e9'}} ></View>
+        <View style={{height:1,backgroundColor:'#e4e2e4'}} ></View>
+        <View style={{height:1,backgroundColor:'#efeeef'}} ></View>
+        <View style={{height:1,backgroundColor:'#f5f5f5'}} ></View>
+        <View style={{height:1,backgroundColor:'#fafafa'}} ></View>
+        <View style={{height:1,backgroundColor:'#fdfdfd'}} ></View>
+        <View style={{height:1,backgroundColor:'#fefefe'}} ></View>
+        <View style={{height:1,backgroundColor:'#fff'}} ></View>
       </View>
-      <View>
+      <View style={{flex:1}}>
         <FlatList 
-          data={tempCart}
+          data={tempOwnerId}
           keyExtractor={(item,idx) => idx }
-          renderItem={(itemData,index) => <CartItem data={itemData} onViewDetail={() =>{
+          renderItem={(itemData,index) => <CartItem data={itemData} ownerData={tempCartOwner} productData={tempCart} handleCheckedProdCart={handleCheckedProdCart} cartOwnerSelected={cartOwnerSelected} handleCheckedOwnerCart={handleCheckedOwnerCart} onViewDetail={() =>{
             props.navigation.navigate('ProductDetailScreen',{
               prodId : itemData.item.id
             })
           }}
-          onAddToCart={() => {
-            dispatch(addToCart(itemData.item))
-          }} 
           /> 
           }
         />
-        <Text>Open up CartScreen.js to start working on your app!</Text>
       </View>
-      <View style={styles.footerContainer}>
-        <View style={styles.discountContainer}>
-          <View style={{...styles.discountSelect,...styles.discountBorder}}>
-            <View style={styles.dicountTitle}>
-              <Ionicons name="cash-outline" size={30} color={Colors.primary500} />
-              <Title styleProps={{paddingTop:4,paddingLeft:10}}>Makin Hemat Pakai Promo</Title>
+      <View style={{height:120}}>
+        <View style={styles.footerContainer}>
+        <View style={{height:1,backgroundColor:'#fff'}} ></View>
+        <View style={{height:1,backgroundColor:'#fefefe'}} ></View>
+        <View style={{height:1,backgroundColor:'#fafafa'}} ></View>
+        <View style={{height:1,backgroundColor:'#fdfdfd'}} ></View>
+        <View style={{height:1,backgroundColor:'#f5f5f5'}} ></View>
+        <View style={{height:1,backgroundColor:'#efeeef'}} ></View>
+        <View style={{height:1,backgroundColor:'#e4e2e4'}} ></View>
+        <View style={{height:1,backgroundColor:'#e9e8e9'}} ></View>
+          <View style={styles.discountContainer}>
+            <View style={{...styles.discountSelect,...styles.discountBorder}}>
+              <View style={styles.dicountTitle}>
+                <Ionicons name="cash-outline" size={30} color={Colors.primary500} />
+                <Title styleProps={{paddingTop:4,paddingLeft:10}}>Makin Hemat Pakai Promo</Title>
+              </View>
+              <Title  styleProps={{paddingTop:4,paddingLeft:10}}>&gt;</Title>
             </View>
-            <Title  styleProps={{paddingTop:4,paddingLeft:10}}>&gt;</Title>
           </View>
-        </View>
-        <View style={styles.discountSelect}>
-          <View><Heading>{Currency(selectedCart.totalAmount,'rp')}</Heading></View>
-          <View>
-          <ButtonOpacity variant='primary' styleProps={{padding:20}}><Title styleProps={{color:Colors.white}}>Beli ({Object.keys(selectedCart.items).length})</Title></ButtonOpacity>
+          <View style={styles.discountSelect}>
+            <View><Heading>{Currency(selectedCart.totalAmount,'rp')}</Heading></View>
+            <View>
+            {
+              isLoading ? 
+              <ActivityIndicator size='large' color={Colors.primary500} />
+              : 
+              <ButtonOpacity variant='primary' styleProps={{padding:20}} onPress={() => handleCheckout()}><Title styleProps={{color:Colors.white}}>Checkout ({selectedCart.totalItems})</Title></ButtonOpacity>
+            }
+            </View>
           </View>
         </View>
       </View>
@@ -97,7 +174,8 @@ const styles = StyleSheet.create({
     padding:10,
     flexDirection:'row',
     justifyContent:'space-between',
-    backgroundColor:Colors.background
+    backgroundColor:Colors.background,
+    height:'94%'
   },
   footerContainer:{
     backgroundColor:Colors.background,
@@ -123,5 +201,7 @@ const styles = StyleSheet.create({
   },
   dicountTitle:{
     flexDirection:'row',
+  },
+  shadow:{
   }
 });

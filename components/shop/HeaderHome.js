@@ -6,7 +6,7 @@ import Colors from '../../constants/Colors'
 import { TextLittle } from '../Font';
 import ButtonOpacity from '../ButtonOpacity';
 
-export default function HeaderHome({data,onRedirectCart}) {
+export default function HeaderHome({data,onRedirectCart,openDrawer}) {
   const totalCart = useSelector(state => Object.keys(state.carts.items).length)
     return (
       <View style={styles.headerBackground}>
@@ -38,7 +38,9 @@ export default function HeaderHome({data,onRedirectCart}) {
                   </ButtonOpacity>
                 </View>
                 <View style={styles.containerHeaderIcon}>
-                  <Ionicons name='menu-sharp' size={24}  style={styles.headerIcon}  />
+                  <ButtonOpacity onPress={() => openDrawer()}>
+                    <Ionicons name='menu-sharp' size={24}  style={styles.headerIcon}  />
+                  </ButtonOpacity>
                 </View>
               </View>
             </View>
